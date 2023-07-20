@@ -27,10 +27,10 @@ include_directories(
 )
 
 # 搜索src下面的所有源文件，生成文件列表
-file(GLOB_RECURSE SOURCE_LIST "src/*.c" "src/*.h")
+file(GLOB_RECURSE SOURCE_LIST "src/*.cpp" "src/*.h")
 
 # 将源文件列表加入到工程中
-add_executable(${PROJECT_NAME} ${SOURCE_LIST} "src/plat/sys_plat.c")
+add_executable(${PROJECT_NAME} ${SOURCE_LIST} "src/plat/sys_plat.cpp")
 
 # 与一些库进行编译链接，生成最终的程序
 # 针对网络的平台配置
