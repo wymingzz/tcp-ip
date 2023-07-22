@@ -1,5 +1,16 @@
 #include "nlist.h"
 
+void nlist_node_init(nlist_node_t* node)
+{
+	node->pre = node->next = nullptr;
+}
+
+void nlist_init(nlist_t* list)
+{
+	list->first = list->last = nullptr;
+	list->count = 0;
+}
+
 bool nlist_is_empty(const nlist_t* list)
 {
 	return list->count == 0;

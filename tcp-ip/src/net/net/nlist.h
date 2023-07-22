@@ -12,6 +12,10 @@ typedef struct _nlist_t {
 	_nlist_t() :first(nullptr), last(nullptr), count(0) {};
 }nlist_t;
 
+void nlist_node_init(nlist_node_t* node);
+
+void nlist_init(nlist_t* list);
+
 bool nlist_is_empty(const nlist_t* list);
 
 void nlist_insert_first(nlist_t* list, nlist_node_t* node);

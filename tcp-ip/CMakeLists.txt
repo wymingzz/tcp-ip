@@ -30,7 +30,7 @@ include_directories(
 file(GLOB_RECURSE SOURCE_LIST "src/*.cpp" "src/*.h")
 
 # 将源文件列表加入到工程中
-add_executable(${PROJECT_NAME} ${SOURCE_LIST} "src/plat/sys_plat.cpp" "src/app/echo/tcp_echo_client.h" "src/app/echo/tcp_echo_client.cpp" "src/app/echo/tcp_echo_server.h" "src/app/echo/tcp_echo_server.cpp" "src/net/net/net.h" "src/net/src/net.cpp" "src/net/net/net_err.h" "src/net/net/exmsg.h" "src/net/src/exmsg.cpp" "src/plat/net_plat.h" "src/plat/net_plat.cpp" "src/plat/netif_pcap.h" "src/plat/netif_pcap.cpp" "src/net/net/dbg.h" "src/net/src/dbg.cpp" "src/net/net/nlist.h" "src/net/src/nlist.cpp")
+add_executable(${PROJECT_NAME} ${SOURCE_LIST} "src/plat/sys_plat.cpp" "src/app/echo/tcp_echo_client.h" "src/app/echo/tcp_echo_client.cpp" "src/app/echo/tcp_echo_server.h" "src/app/echo/tcp_echo_server.cpp" "src/net/net/net.h" "src/net/src/net.cpp" "src/net/net/net_err.h" "src/net/net/exmsg.h" "src/net/src/exmsg.cpp" "src/plat/net_plat.h" "src/plat/net_plat.cpp" "src/plat/netif_pcap.h" "src/plat/netif_pcap.cpp" "src/net/net/dbg.h" "src/net/src/dbg.cpp" "src/net/net/nlist.h" "src/net/src/nlist.cpp" "src/net/net/mblock.h" "src/net/src/mblock.cpp" "src/net/net/nlocker.h" "src/net/src/nlocker.cpp" "src/net/net/net_cfg.h")
 
 # 与一些库进行编译链接，生成最终的程序
 # 针对网络的平台配置
