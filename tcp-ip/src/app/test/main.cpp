@@ -5,6 +5,7 @@
 #include "net.h"
 #include "netif_pcap.h"
 #include "dbg.h"
+#include "nlist.h"
 
 static sys_sem_t sem;
 static int counter;
@@ -45,17 +46,67 @@ net_err_t netdev_init(void) {
 	return NET_ERR_OK;
 }
 
-#define DBG_TEST DBG_LEVEL_INFO
+typedef struct _tnode_t {
+	nlist_node_t node;
+	int id;
+	_tnode_t() :id(0) {};
+}tnode_t;
+
+void nlist_test() {
+#define NODE_CNT 4
+	tnode_t node[NODE_CNT];
+	nlist_t list;
+
+	plat_printf("insert first\n");
+	for (int i = 0; i < NODE_CNT; i++) {
+		node[i].id = i;
+		nlist_insert_first(&list, &node[i].node);
+	}
+	nlist_node_t* p;
+	plat_printf("remove first\n");
+	for (int i = 0; i < NODE_CNT; i++) {
+		p = nlist_remove_first(&list);
+		tnode_t* tnode = nlist_entry(p, tnode_t, node);
+		plat_printf("id = %d\n", tnode ? tnode->id : -1);
+	}
+	plat_printf("list count: %d\n", list.count);
+
+	plat_printf("insert last\n");
+
+	for (int i = 0; i < NODE_CNT; i++) {
+		node[i].id = i;
+		nlist_insert_last(&list, &node[i].node);
+	}
+
+	plat_printf("remove first\n");
+	for (int i = 0; i < NODE_CNT; i++) {
+		p = nlist_remove_first(&list);
+		tnode_t* tnode = nlist_entry(p, tnode_t, node);
+		plat_printf("id = %d\n", tnode ? tnode->id : -1);
+	}
+
+	plat_printf("insert after\n");
+
+	for (int i = 0; i < NODE_CNT; i++) {
+		node[i].id = i;
+		nlist_insert_after(&list, list.first, &node[i].node);
+	}
+
+	nlist_for_each(p, &list) {
+		tnode_t* tnode = nlist_entry(p, tnode_t, node);
+		plat_printf("id: %d\n", tnode->id);
+	}
+}
+
+void basic_test() {
+	nlist_test();
+}
 
 int main(void) {
-	dbg_info(DBG_TEST, "info");
-	dbg_warning(DBG_TEST, "warning");
-	dbg_error(DBG_TEST, "error");
-	dbg_assert(1 == 1, "failed");
-	dbg_assert(1 == 0, "failed");
-
 
 	net_init();
+
+	basic_test();
 
 	net_start();
 
