@@ -7,6 +7,7 @@
 #include "dbg.h"
 #include "nlist.h"
 #include "mblock.h"
+#include "pktbuf.h"
 
 static sys_sem_t sem;
 static int counter;
@@ -119,9 +120,138 @@ void mblock_test() {
 	mblock_destroy(&blist);
 }
 
+void pktbuf_test() {
+	pktbuf_t* buf = pktbuf_alloc(2000);
+	pktbuf_free(buf);
+
+	//buf = pktbuf_alloc(2000);
+	//for (int i = 0; i < 16; i++) {
+	//	pktbuf_add_header(buf, 33, true);
+	//}
+
+	//for (int i = 0; i < 16; i++) {
+	//	pktbuf_remove_header(buf, 33);
+	//}
+
+	//for (int i = 0; i < 16; i++) {
+	//	pktbuf_add_header(buf, 33, false);
+	//}
+
+	//for (int i = 0; i < 16; i++) {
+	//	pktbuf_remove_header(buf, 33);
+	//}
+
+	//pktbuf_free(buf);
+
+	//buf = pktbuf_alloc(8);
+	//pktbuf_resize(buf, 32);
+	//pktbuf_resize(buf, 288);
+	//pktbuf_resize(buf, 4922);
+	//pktbuf_resize(buf, 1921);
+	//pktbuf_resize(buf, 288);
+	//pktbuf_resize(buf, 32);
+	//pktbuf_resize(buf, 8);
+	//pktbuf_resize(buf, 0);
+	//pktbuf_free(buf);
+
+	//buf = pktbuf_alloc(689);
+	//pktbuf_t* sbuf = pktbuf_alloc(892);
+	//pktbuf_join(buf, sbuf);
+	//pktbuf_free(buf);
+
+	//buf = pktbuf_alloc(32);
+	//pktbuf_join(buf, pktbuf_alloc(4));
+	//pktbuf_join(buf, pktbuf_alloc(16));
+	//pktbuf_join(buf, pktbuf_alloc(54));
+	//pktbuf_join(buf, pktbuf_alloc(32));
+	//pktbuf_join(buf, pktbuf_alloc(38));
+
+	//pktbuf_set_cont(buf, 44);
+	//pktbuf_set_cont(buf, 60);
+	//pktbuf_set_cont(buf, 64);
+	//pktbuf_set_cont(buf, 128);
+	//pktbuf_set_cont(buf, 135);
+	//pktbuf_free(buf);
+
+	buf = pktbuf_alloc(32);
+	pktbuf_join(buf, pktbuf_alloc(4));
+	pktbuf_join(buf, pktbuf_alloc(16));
+	pktbuf_join(buf, pktbuf_alloc(54));
+	pktbuf_join(buf, pktbuf_alloc(32));
+	pktbuf_join(buf, pktbuf_alloc(38));
+	pktbuf_join(buf, pktbuf_alloc(512));
+	pktbuf_join(buf, pktbuf_alloc(1000));
+
+	pktbuf_reset_acc(buf);
+
+	static uint16_t temp[1000];
+	for (int i = 0; i < 1000; i++) {
+		temp[i] = i;
+	}
+	pktbuf_write(buf, (uint8_t*)temp, buf->total_size);
+	
+	static uint16_t read_temp[1000];
+	plat_memset(read_temp, 0, sizeof read_temp);
+	
+	pktbuf_reset_acc(buf);
+	pktbuf_read(buf, (uint8_t*)read_temp, buf->total_size);
+	if (plat_memcmp(temp, read_temp, buf->total_size) != 0) {
+		plat_printf("net equal\n");
+		return;
+	}
+
+	//plat_memset(read_temp, 0, sizeof read_temp);
+	//pktbuf_seek(buf, 18 * 2);
+	//pktbuf_read(buf, (uint8_t*)read_temp, 56);
+	//if (plat_memcmp(temp+18, read_temp, 56) != 0) {
+	//	plat_printf("net equal\n");
+	//	return;
+	//}
+
+	//plat_memset(read_temp, 0, sizeof read_temp);
+	//pktbuf_seek(buf, 85 * 2);
+	//pktbuf_read(buf, (uint8_t*)read_temp, 256);
+	//if (plat_memcmp(temp + 85, read_temp, 256) != 0) {
+	//	plat_printf("net equal\n");
+	//	return;
+	//}
+
+	pktbuf_t* dest = pktbuf_alloc(1024);
+	pktbuf_seek(dest, 600);
+	pktbuf_seek(buf, 200);
+	pktbuf_copy(dest, buf, 122);
+
+	plat_memset(read_temp, 0, sizeof read_temp);
+	pktbuf_seek(dest, 600);
+	pktbuf_read(dest, (uint8_t*)read_temp, 122);
+
+	if (plat_memcmp(temp + 100, read_temp, 122) != 0) {
+		plat_printf("net equal\n");
+		return;
+	}
+
+	pktbuf_reset_acc(dest);
+	pktbuf_fill(dest, 53, dest->total_size);
+	plat_memset(read_temp, 0, sizeof read_temp);
+	pktbuf_seek(dest, 0);
+	pktbuf_read(dest, (uint8_t*)read_temp, dest->total_size);
+
+	char* ptr = (char*)read_temp;
+	for (int i = 0; i < dest->total_size; i++) {
+		if (*ptr++ != 53) {
+			plat_printf("net equal\n");
+			return;
+		}
+	}
+
+	pktbuf_free(dest);
+	pktbuf_free(buf);
+}
+
 void basic_test() {
-	nlist_test();
-	mblock_test();
+	//nlist_test();
+	//mblock_test();
+	pktbuf_test();
 }
 
 int main(void) {

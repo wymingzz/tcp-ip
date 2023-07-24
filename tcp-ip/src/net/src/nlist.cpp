@@ -5,6 +5,26 @@ void nlist_node_init(nlist_node_t* node)
 	node->pre = node->next = nullptr;
 }
 
+void nlist_node_set_next(nlist_node_t* node, nlist_node_t* next)
+{
+	if (node->next != nullptr) {
+		node->next->pre = next;
+	}
+	next->next = node->next;
+	node->next = next;
+	next->pre = node;
+}
+
+void nlist_node_set_pre(nlist_node_t* node, nlist_node_t* pre)
+{
+	if (node->pre != nullptr) {
+		node->pre->next = pre;
+	}
+	pre->pre = node->pre;
+	node->pre = pre;
+	pre->next = node;
+}
+
 void nlist_init(nlist_t* list)
 {
 	list->first = list->last = nullptr;
@@ -60,6 +80,29 @@ void nlist_insert_after(nlist_t* list, nlist_node_t* pre, nlist_node_t* node)
 	node->pre = pre;
 	node->next->pre = node;
 	list->count++;
+}
+
+void nlist_insert_list(nlist_t* list, nlist_t* next_list, bool add_front)
+{
+	if (next_list == nullptr || nlist_is_empty(next_list)) {
+		return;
+	}
+	if (nlist_is_empty(list)) {
+		list->first = next_list->first;
+		list->last = next_list->last;
+	}
+	else if (add_front) {
+		list->first->pre = next_list->last;
+		next_list->last->next = list->first;
+		list->first = next_list->first;
+	}
+	else {
+		list->last->next = next_list->first;
+		next_list->first->pre = list->last;
+		list->last = next_list->last;
+	}
+	list->count += next_list->count;
+	nlist_init(next_list);
 }
 
 nlist_node_t* nlist_remove(nlist_t* list, nlist_node_t* node)
