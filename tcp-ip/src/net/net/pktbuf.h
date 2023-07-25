@@ -18,6 +18,7 @@ typedef struct _pktbuf_t {
 	nlist_t blk_list;
 	nlist_node_t node;
 
+	int ref;
 	int pos;
 	pktblk_t* curr_blk;
 	uint8_t* blk_offset;
@@ -137,6 +138,12 @@ net_err_t pktbuf_copy(pktbuf_t* dest, pktbuf_t* src, int size);
 /// <returns>是否填充成功</returns>
 net_err_t pktbuf_fill(pktbuf_t* buf, uint8_t v, int size);
 
+/// <summary>
+/// 数据包引用
+/// </summary>
+/// <param name="buf">被引用的数据包</param>
+void pktbuf_inc_ref(pktbuf_t* buf);
+
 /**
  * 获取当前block的下一个子包
  */
@@ -171,6 +178,16 @@ static inline pktblk_t* pktbuf_first_blk(pktbuf_t* buf) {
 static inline pktblk_t* pktbuf_last_blk(pktbuf_t* buf) {
 	nlist_node_t* first = buf->blk_list.last;
 	return nlist_entry(first, pktblk_t, node);
+}
+
+/// <summary>
+/// 返回数据包中第一个数据块的data开始指针
+/// </summary>
+/// <param name="buf">数据包</param>
+/// <returns>数据包中第一个数据块的data开始指针</returns>
+static inline uint8_t* pktbuf_data(pktbuf_t* buf) {
+	pktblk_t* first = pktbuf_first_blk(buf);
+	return first == nullptr ? nullptr : first->data;
 }
 
 #endif // !PKTBUF_H

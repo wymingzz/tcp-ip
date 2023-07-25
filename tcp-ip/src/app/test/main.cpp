@@ -124,54 +124,55 @@ void pktbuf_test() {
 	pktbuf_t* buf = pktbuf_alloc(2000);
 	pktbuf_free(buf);
 
-	//buf = pktbuf_alloc(2000);
-	//for (int i = 0; i < 16; i++) {
-	//	pktbuf_add_header(buf, 33, true);
-	//}
+	buf = pktbuf_alloc(2000);
+	for (int i = 0; i < 16; i++) {
+		pktbuf_add_header(buf, 33, true);
+	}
 
-	//for (int i = 0; i < 16; i++) {
-	//	pktbuf_remove_header(buf, 33);
-	//}
+	for (int i = 0; i < 16; i++) {
+		pktbuf_remove_header(buf, 33);
+	}
 
-	//for (int i = 0; i < 16; i++) {
-	//	pktbuf_add_header(buf, 33, false);
-	//}
+	for (int i = 0; i < 16; i++) {
+		pktbuf_add_header(buf, 33, false);
+	}
 
-	//for (int i = 0; i < 16; i++) {
-	//	pktbuf_remove_header(buf, 33);
-	//}
+	for (int i = 0; i < 16; i++) {
+		pktbuf_remove_header(buf, 33);
+	}
 
-	//pktbuf_free(buf);
+	pktbuf_free(buf);
 
-	//buf = pktbuf_alloc(8);
-	//pktbuf_resize(buf, 32);
-	//pktbuf_resize(buf, 288);
-	//pktbuf_resize(buf, 4922);
-	//pktbuf_resize(buf, 1921);
-	//pktbuf_resize(buf, 288);
-	//pktbuf_resize(buf, 32);
-	//pktbuf_resize(buf, 8);
-	//pktbuf_resize(buf, 0);
-	//pktbuf_free(buf);
+	buf = pktbuf_alloc(8);
+	pktbuf_resize(buf, 32);
+	pktbuf_resize(buf, 288);
+	pktbuf_resize(buf, 4922);
+	pktbuf_resize(buf, 1921);
+	pktbuf_resize(buf, 288);
+	pktbuf_resize(buf, 32);
+	pktbuf_resize(buf, 8);
+	pktbuf_resize(buf, 0);
+	pktbuf_free(buf);
 
-	//buf = pktbuf_alloc(689);
-	//pktbuf_t* sbuf = pktbuf_alloc(892);
-	//pktbuf_join(buf, sbuf);
-	//pktbuf_free(buf);
+	buf = pktbuf_alloc(689);
+	pktbuf_t* sbuf = pktbuf_alloc(892);
+	pktbuf_join(buf, sbuf);
+	pktbuf_free(sbuf);
+	pktbuf_free(buf);
 
-	//buf = pktbuf_alloc(32);
-	//pktbuf_join(buf, pktbuf_alloc(4));
-	//pktbuf_join(buf, pktbuf_alloc(16));
-	//pktbuf_join(buf, pktbuf_alloc(54));
-	//pktbuf_join(buf, pktbuf_alloc(32));
-	//pktbuf_join(buf, pktbuf_alloc(38));
+	buf = pktbuf_alloc(32);
+	pktbuf_join(buf, pktbuf_alloc(4));
+	pktbuf_join(buf, pktbuf_alloc(16));
+	pktbuf_join(buf, pktbuf_alloc(54));
+	pktbuf_join(buf, pktbuf_alloc(32));
+	pktbuf_join(buf, pktbuf_alloc(38));
 
-	//pktbuf_set_cont(buf, 44);
-	//pktbuf_set_cont(buf, 60);
-	//pktbuf_set_cont(buf, 64);
-	//pktbuf_set_cont(buf, 128);
-	//pktbuf_set_cont(buf, 135);
-	//pktbuf_free(buf);
+	pktbuf_set_cont(buf, 44);
+	pktbuf_set_cont(buf, 60);
+	pktbuf_set_cont(buf, 64);
+	pktbuf_set_cont(buf, 128);
+	pktbuf_set_cont(buf, 135);
+	pktbuf_free(buf);
 
 	buf = pktbuf_alloc(32);
 	pktbuf_join(buf, pktbuf_alloc(4));
@@ -200,21 +201,21 @@ void pktbuf_test() {
 		return;
 	}
 
-	//plat_memset(read_temp, 0, sizeof read_temp);
-	//pktbuf_seek(buf, 18 * 2);
-	//pktbuf_read(buf, (uint8_t*)read_temp, 56);
-	//if (plat_memcmp(temp+18, read_temp, 56) != 0) {
-	//	plat_printf("net equal\n");
-	//	return;
-	//}
+	plat_memset(read_temp, 0, sizeof read_temp);
+	pktbuf_seek(buf, 18 * 2);
+	pktbuf_read(buf, (uint8_t*)read_temp, 56);
+	if (plat_memcmp(temp+18, read_temp, 56) != 0) {
+		plat_printf("net equal\n");
+		return;
+	}
 
-	//plat_memset(read_temp, 0, sizeof read_temp);
-	//pktbuf_seek(buf, 85 * 2);
-	//pktbuf_read(buf, (uint8_t*)read_temp, 256);
-	//if (plat_memcmp(temp + 85, read_temp, 256) != 0) {
-	//	plat_printf("net equal\n");
-	//	return;
-	//}
+	plat_memset(read_temp, 0, sizeof read_temp);
+	pktbuf_seek(buf, 85 * 2);
+	pktbuf_read(buf, (uint8_t*)read_temp, 256);
+	if (plat_memcmp(temp + 85, read_temp, 256) != 0) {
+		plat_printf("net equal\n");
+		return;
+	}
 
 	pktbuf_t* dest = pktbuf_alloc(1024);
 	pktbuf_seek(dest, 600);
